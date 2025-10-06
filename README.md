@@ -24,8 +24,8 @@
 
 1.  **克隆仓库**
     ```bash
-    git clone https://github.com/[你的名字或组织]/[你的项目仓库名].git
-    cd [你的项目仓库名]
+    git clone https://github.com/piexian/BiliRoaming-Resolver-Server.git
+    cd BiliRoaming-Resolver-Server
     ```
 
 2.  **启动服务**
