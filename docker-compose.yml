@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  nginx-proxy:
+    image: nginx:1.21-alpine
+    container_name: biliroaming-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx_config:/etc/nginx/conf.d
+      - letsencrypt_certs:/etc/letsencrypt
+    depends_on:
+      - config-ui
+
+  config-ui:
+    build: ./config-ui
+    container_name: biliroaming-config-ui
+    restart: always
+    volumes:
+      - ./nginx:/app/templates/nginx
+      - nginx_config:/config/nginx
+      - letsencrypt_certs:/etc/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  nginx_config:
+  letsencrypt_certs:

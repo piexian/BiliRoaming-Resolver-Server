@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiliRoaming 解析服务器 - 配置</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f7f7f7; }
+        .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
+        h1 { color: #333; }
+        form { display: flex; flex-direction: column; }
+        label { text-align: left; margin-top: 15px; color: #555; font-weight: bold; }
+        input[type="text"], input[type="email"] { padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ddd; font-size: 16px; }
+        input[type="submit"] { margin-top: 25px; padding: 12px; border: none; border-radius: 4px; background-color: #007bff; color: white; font-size: 16px; cursor: pointer; transition: background-color 0.2s; }
+        input[type="submit"]:hover { background-color: #0056b3; }
+        .message { margin-top: 20px; padding: 15px; border-radius: 4px; text-align: left; }
+        .message.success { background-color: #e7f7e7; color: #2d6a2d; border-left: 5px solid #4CAF50; }
+        .message.error { background-color: #fde2e2; color: #8b0000; border-left: 5px solid #F44336; }
+        .message.info { background-color: #e7f3fe; color: #31708f; border-left: 5px solid #2196F3; }
+        .configured-box { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if configured %}
+            <h1>服务运行中</h1>
+            <div class="message success">{{ message }}</div>
+        {% else %}
+            <h1>首次运行配置</h1>
+            <p>请输入您的域名和邮箱以自动完成部署。</p>
+            <form method="post">
+                <label for="domain">您的域名:</label>
+                <input type="text" id="domain" name="domain" placeholder="例如: bili.yourdomain.com" required>
+                
+                <label for="email">您的邮箱 (用于SSL证书):</label>
+                <input type="email" id="email" name="email" placeholder="例如: your-email@example.com" required>
+                
+                <input type="submit" value="开始配置">
+            </form>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

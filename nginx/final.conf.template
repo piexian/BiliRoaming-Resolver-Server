@@ -1,0 +1,45 @@
+# 这是配置成功后生成的最终 Nginx 配置文件模板
+
+server {
+    server_name ${SERVER_NAME};
+    listen 80;
+    # 将所有 HTTP 请求强制跳转到 HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    server_name ${SERVER_NAME};
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    # SSL 证书路径
+    ssl_certificate /etc/letsencrypt/live/${SERVER_NAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${SERVER_NAME}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    # BiliRoaming API 代理
+    location ~ ^/(pgc|intl) {
+        if ($http_x_from_biliroaming = "") { return 403; }
+
+        location /pgc/player/api/playurl {
+            proxy_pass https://api.bilibili.com;
+            proxy_set_header Host api.bilibili.com;
+        }
+
+        location ~ ^/intl/gateway/v2/ogv/playurl {
+            proxy_pass https://api.global.bilibili.com;
+            proxy_set_header Host api.global.bilibili.com;
+        }
+
+        location ~ ^/intl/gateway/v2/app/(subtitle|search/type) {
+            proxy_pass https://app.global.bilibili.com;
+            proxy_set_header Host app.global.bilibili.com;
+        }
+    }
+
+    # 根目录返回一个成功信息
+    location / {
+        add_header Content-Type text/plain;
+        return 200 "BiliRoaming Resolver Server is running successfully on ${SERVER_NAME}";
+    }
+}
