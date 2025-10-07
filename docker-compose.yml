@@ -18,6 +18,8 @@ services:
     build: ./config-ui
     container_name: biliroaming-config-ui
     restart: always
+    ports:
+      - "5000:5000"
     volumes:
       - ./nginx:/app/templates/nginx
       - nginx_config:/config/nginx

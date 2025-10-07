@@ -6,7 +6,10 @@ WORKDIR /app
 
 # 复制依赖文件并安装
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install -y curl ca-certificates --no-install-recommends \
+	&& pip install --no-cache-dir -r requirements.txt \
+	&& apt-get purge -y --auto-remove \
+	&& rm -rf /var/lib/apt/lists/*
 
 # 复制应用代码
 COPY . .

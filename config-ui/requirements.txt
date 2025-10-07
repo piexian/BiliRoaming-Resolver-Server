@@ -1,2 +1,5 @@
 Flask==2.1.2
-docker==5.0.3
+Werkzeug==2.2.2
+docker==4.4.4
+urllib3<2
+requests-unixsocket==0.2.0
